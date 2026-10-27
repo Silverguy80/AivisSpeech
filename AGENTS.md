@@ -100,3 +100,11 @@ AivisSpeech は VOICEVOX エディターを upstream として継続的に追従
 - 型の境界や preload / IPC を変更した場合は `pnpm run typecheck` を実行してください。
 - lint 対象が明確な場合は、全体 lint の前に対象ファイルに対して `pnpm exec eslint <files>` を実行してください。
 - 実行できない検証がある場合は、コマンド、失敗理由、環境制限か実装不具合かを区別して報告してください。
+
+## Cursor Cloud specific instructions
+
+- Node.js は `package.json` の `engines`（`>=22.14.0 <23`）を満たすイメージ同梱の Node 22 でよい。pnpm は `packageManager` の 10.3.0 を corepack で使う。`npm` や `yarn` ではインストールできない。
+- `pnpm install --frozen-lockfile` のあと、`.env` が無ければ `.env.development` をコピーする。このファイルは `executionEnabled: false` なので、エディタは音声合成エンジンのプロセスを起動しない。
+- AivisSpeech Engine 1.2.0 の Linux x64 ビルドは `~/.local/share/aivisspeech-engine` に置く。起動は `./run --host 127.0.0.1 --port 10101 --no-use_gpu`。初回起動時に AivisHub のデフォルトモデルが `~/.local/share/AivisSpeech-Engine` へ入る。
+- エディタの開発サーバーは `pnpm run electron:serve`。Vite は `http://localhost:5173/`（IPv6 の `::1`）で待ち受ける。
+- 維持されている自動テストは `pnpm run test-updater:unit`。型チェックは `pnpm run typecheck`。製品パッケージの `electron:build` は CI の手順であり、この環境の起動確認には使わない。
